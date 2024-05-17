@@ -4,7 +4,7 @@
 arduino-cli \
   lib install \
     --git-url \
-      https://github.com/martin-eden/Embedded-me_Types \
+      https://github.com/martin-eden/Embedded-me_BaseTypes \
       https://github.com/martin-eden/Embedded-me_UartSpeeds \
       https://github.com/martin-eden/Embedded-me_InstallStandardStreams
 

@@ -7,4 +7,4 @@ arduino-cli lib uninstall me_SerialTokenizer
 arduino-cli lib uninstall \
   me_InstallStandardStreams \
   me_UartSpeeds \
-  me_Types
+  me_BaseTypes
