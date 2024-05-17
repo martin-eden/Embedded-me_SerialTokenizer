@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-13
+  Last mod.: 2024-05-17
 */
 
 #include "me_SerialTokenizer.h"
@@ -17,8 +17,9 @@
 #include <Arduino.h> // delay()
 #include <ctype.h> // isspace()
 
-#include <me_Types.h>
+#include <me_BaseTypes.h>
 
+using namespace me_BaseTypes;
 using namespace me_SerialTokenizer;
 
 /*
