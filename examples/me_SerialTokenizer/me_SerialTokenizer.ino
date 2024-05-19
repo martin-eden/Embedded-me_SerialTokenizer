@@ -12,14 +12,18 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-17
+  Last mod.: 2024-05-19
 */
 
 #include <me_SerialTokenizer.h>
+#include <me_MemorySegment.h>
 
 #include <me_InstallStandardStreams.h>
 #include <me_UartSpeeds.h>
 #include <me_BaseTypes.h>
+
+// Forwards
+void RunTest();
 
 void setup()
 {
@@ -27,24 +31,45 @@ void setup()
   Serial.setTimeout(10);
   InstallStandardStreams();
   printf("[me_SerialTokenizer] Okay, we are here.\n");
-}
 
-using namespace me_SerialTokenizer;
-using namespace me_BaseTypes;
+  RunTest();
+}
 
 void loop()
 {
-  const TUint_2 EntityMaxLength = 8;
-  TChar Entity[EntityMaxLength + 1];
+}
 
-  TUint_2 EntityLength;
+void RunTest()
+{
+  using namespace me_BaseTypes;
+  using namespace me_MemorySegment;
+  using namespace me_SerialTokenizer;
 
-  if (GetEntity(&Entity[0], &EntityLength, EntityMaxLength))
+  const TUint_2 EntityMaxLength = 1;
+
+  TChar EntityBuf[EntityMaxLength + 1];
+
+  TMemorySegment Buffer =
+    {
+      .Start = (TMemoryPoint) &EntityBuf,
+      .Size = sizeof(EntityBuf),
+    };
+
+  TEntity Entity;
+
+  printf("We are capturing space-separated entries from serial input.\n");
+  printf("Maximum entry length is %u.\n", EntityMaxLength);
+  printf("Try input something..\n");
+
+  while (true)
   {
-    // Add zero byte to entity to make it ASCIIZ (for printf()):
-    Entity[EntityLength] = '\0';
-
-    printf("(%s)\n", Entity);
+    if (GetEntity(&Entity, Buffer))
+    {
+      printf("(%s)", Entity.Chars);
+      if (Entity.IsTrimmed)
+        printf("..");
+      printf(" # %u\n", Entity.Length);
+    }
   }
 }
 
@@ -52,4 +77,5 @@ void loop()
   2024-05-08
   2024-05-13
   2024-05-17
+  2024-05-19
 */
