@@ -1,6 +1,70 @@
-# Interface design
+# What
 
-What to do when we don't have capacity to store entity?
+Interface design notes
+
+## Main function signature
+
+  1.
+
+    bool (char*, ui2*, ui2)
+
+    "if (GetEntity(&Entity, &EntityLen, 2))"
+
+    So caller must provide pointer to buffer where characters would
+    be stored and capacity of that buffer so we wont write past it.
+    We will write length of captured entity to ui2*.
+
+    Implementation-friendly. That parameters naturally go to
+    implementation core.
+
+    Quite common in C. Passing zillions base type parameters.
+
+  2.
+
+    bool ((char*, ui2*, bool), (char*, ui2))
+
+    "if GetEntity(&Entity, Buffer)"
+
+    Here we introducing interface structures.
+
+      Entity is described as
+
+        * Chars - pointer to ASCIIZ
+
+          One byte is wasted, data may contradict with <.Length>.
+
+          But I want to be able printf() it. It's practical.
+
+        * Length - length of ASCIIZ
+
+          Yes, you can get string length with O(1) complexity!
+          Unbelievable in C world.
+
+        * IsTrimmed - there were more data but we purged it
+
+          Practical too. As I've explained in other section, we want to
+          keep tracking of number of entities. The buck stops here. If
+          we can't process one, do whatever you want but leave stream
+          pointer at the next gap.
+
+      Buffer is described as memory segment
+
+        * Start - memory address for start of data
+        * Length - length of data
+
+        I wondering why in such glorious language base functions
+        like memcpy() and memcmp() does not use structures.
+
+        I suspect community is unable to have consensus how to decide
+        how to name fields. But I am free to design code like I want,
+        rare state.
+
+
+
+
+
+
+## What to do when we don't have capacity to store entity?
 
 Say our stream is
 
@@ -32,24 +96,7 @@ What our call should return, place into <Entity> and what state of stream?
     That makes outer logic senseless.
 
 
-# How to understand entry was trimmed?
-
-You can't but I can offer practical workaround.
-
-Say you are reading 3-character entries that are supposed to
-store "0" .. "255".
-
-Here we just want to read entries up to 3 characters.
-
-We can set entry capacity to 4, so for
-
-  "25501" it will set entry to "2550" and it's length to 4.
-
-  Size 4 is more than allowed 3. So the entry is too big and maybe
-  was trimmed.
-
-
-# UART transmission is like blinking flashlight..
+## UART transmission is like blinking flashlight..
 
 When you missed it, you missed it.
 
@@ -64,9 +111,17 @@ with 2k memory.
 
 When buffer is full, you are losing bytes again.
 
+That's quite bad thing because you don't know what was lost.
+
+Best course of action when you (your code) has detected input buffer
+overflow is abort what you was doing, keep purging buffer until you get
+pause, wait "wtf?" request, explain what happened and wait for new
+commands.
+
 Typically 8 bits of byte is transmitted as 10 bits. Inflation, my friend.
 
 So 57600 baud is 5760 bytes per second. Less than 12 ms to fill that
 buffer.
 
--- Martin, 2024-05-13
+
+-- Martin, 2024-05-19
