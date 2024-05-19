@@ -3,11 +3,7 @@
 /*
   Enter random space/newline separated strings to Serial.
 
-  Non-space sequences are caught by GetEntity() and printed:
-
-    (assuming entity max length of 2):
-
-      "  143 1a la la5" -> "(14) (1a) (la) (la)"
+  Non-space sequences are caught by GetEntity() and printed.
 */
 
 /*

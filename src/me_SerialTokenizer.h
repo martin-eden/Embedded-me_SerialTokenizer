@@ -61,5 +61,5 @@ namespace me_SerialTokenizer
 /*
   2024-05-08
   2024-05-13
-  2024-05-19 entity capture is a memory segment
+  2024-05-19 entity capture is a custom record
 */
