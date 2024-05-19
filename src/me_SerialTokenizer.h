@@ -6,22 +6,45 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-17
+  Last mod.: 2024-05-19
 */
 
 #pragma once
 
 #include <me_BaseTypes.h>
+#include <me_MemorySegment.h>
 
 namespace me_SerialTokenizer
 {
   using namespace me_BaseTypes;
+  using namespace me_MemorySegment;
 
-  // Get entity from serial
+  /*
+    Entity record
+
+      Chars: (char*)
+
+        Pointer to ASCIIZ data.
+
+      Length: ui2
+
+        Length in ASCII characters.
+
+      IsTrimmed: bool
+
+        true, when entity would be longer if we had more memory for it
+  */
+  struct TEntity
+  {
+    TChar * Chars;
+    TUint_2 Length;
+    TBool IsTrimmed;
+  };
+
+  // Get entity from Serial
   TBool GetEntity(
-    TChar * Entity,
-    TUint_2 * EntityLength,
-    TUint_2 EntityCapacity
+    TEntity * EnityPtr,
+    TMemorySegment CaptureBuffer
   );
 
   // Implementation
@@ -32,10 +55,11 @@ namespace me_SerialTokenizer
 
   void PurgeCharacter();
   void PurgeSpaces();
-  void PurgeEntity();
+  TBool PurgeEntity();
 }
 
 /*
   2024-05-08
   2024-05-13
+  2024-05-19 entity capture is a memory segment
 */

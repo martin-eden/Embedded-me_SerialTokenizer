@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-17
+  Last mod.: 2024-05-19
 */
 
 #include "me_SerialTokenizer.h"
@@ -17,50 +17,71 @@
 #include <Arduino.h> // delay()
 #include <ctype.h> // isspace()
 
+#include <me_MemorySegment.h>
 #include <me_BaseTypes.h>
 
 using namespace me_BaseTypes;
+using namespace me_MemorySegment;
 using namespace me_SerialTokenizer;
 
 /*
   Get entity from serial stream.
 
-  Arguments
+  Input
 
-    <@ Entity: u1> - Memory address to store entity bytes
-    <@ EntityLengthPtr: u2> - Memory address to store entity size
-    <EntityCapacity: u2> - Size of memory to hold entity
+    Buffer. Memory segment where we can store bytes. It's size is
+    usually big enough.
 
-  Result
+    It IS NOT data to parse. We obtaining data to parse from Serial.
 
-    true - when we got entity
+  Output
 
-  Notes
+    Entity record. In this implementation entity data segment starts at
+    the same address as given buffer. But the length of segment is
+    smaller.
 
-    When entity length exceeds capacity, we read until gap and return
-    true. Entity is trimmed to capacity.
+  Special cases
 
-    We do not write zero byte at end of entity data.
+    When data stream is longer than available memory to hold entity
 
-      Bytes between "entity length" and "entity capacity" can
-      have any values.
+      Purge data stream until gap
+      set <.IsTrimmed> flag
 */
 TBool me_SerialTokenizer::GetEntity(
-  TChar * Entity,
-  TUint_2 * EntityLengthPtr,
-  TUint_2 EntityCapacity
+  TEntity * EntityPtr,
+  TMemorySegment Buffer
 )
 {
-  if (EntityCapacity == 0)
+  TEntity Entity = *EntityPtr;
+
+  Entity.Chars = (TChar *) Buffer.Start;
+  // Now <Entity.Chars> points to the same memory as <Buffer.Start>
+
+  Entity.Length = 0;
+  Entity.IsTrimmed = false;
+
+  *EntityPtr = Entity;
+
+  if (Buffer.Size == 0)
     // you gonna be kidding me!
     return false;
 
+  /*
+    Entity stores data as ASCIIZ. So it's maximum length is one less
+    than buffer size.
+
+    Buffer size = 1 means we don't have any space to get actual
+    data.
+  */
+  if (Buffer.Size == 1)
+    return false;
+
+  // ASCIIZ end
+  Buffer.Start[0] = '\0';
+
   PurgeSpaces();
 
-  TUint_2 EntityLength;
-
-  EntityLength = 0;
-
+  // Pre condition: buffer size >= 2, stream is empty or at non-space
   TChar Char;
   while (PeekCharacter(&Char))
   {
@@ -69,29 +90,30 @@ TBool me_SerialTokenizer::GetEntity(
 
     PurgeCharacter();
 
-    // store character
-    *Entity = Char;
+    // copy character to memory address
+    Buffer.Start[Entity.Length] = Char;
 
-    // advance pointer
-    Entity = Entity + sizeof(Char);
+    // increase size
+    ++Entity.Length;
 
-    // update length
-    EntityLength = EntityLength + 1;
+    // write zero for ASCIIZ
+    Buffer.Start[Entity.Length] = '\0';
 
-    // no place to store?
-    if (EntityLength == EntityCapacity)
+    // no place to store more?
+    TUint_2 EntitySize = Entity.Length + 1;
+    if (EntitySize == Buffer.Size)
     {
-      PurgeEntity();
+      Entity.IsTrimmed = PurgeEntity();
+
       break;
     }
   }
-  // Post-condition: we got space or reached end of stream or reached capacity
+  // Post-condition: stream is empty or at space
 
-  if (EntityLength == 0)
+  *EntityPtr = Entity;
+
+  if (Entity.Length == 0)
     return false;
-
-  // store entity length
-  *EntityLengthPtr = EntityLength;
 
   return true;
 }
@@ -174,23 +196,32 @@ void me_SerialTokenizer::PurgeCharacter()
   until
     space character or
     end of stream
+
+  Returns true when at least one non-space character was dropped.
 */
-void me_SerialTokenizer::PurgeEntity()
+TBool me_SerialTokenizer::PurgeEntity()
 {
   TChar Char;
+  TBool PurgedSomething = false;
+
   while (true)
   {
     if (!PeekCharacter(&Char))
-      return;
+      return PurgedSomething;
 
     if (isspace(Char))
-      return;
+      return PurgedSomething;
 
     PurgeCharacter();
+
+    PurgedSomething = true;
   }
+
+  return PurgedSomething;
 }
 
 /*
   2024-05-08
   2024-05-13
+  2024-05-19 [>~] Interface arguments are records now
 */
