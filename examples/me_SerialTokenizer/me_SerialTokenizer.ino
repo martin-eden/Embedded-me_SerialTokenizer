@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-19
+  Last mod.: 2024-05-20
 */
 
 #include <me_SerialTokenizer.h>
@@ -41,13 +41,13 @@ void RunTest()
   using namespace me_MemorySegment;
   using namespace me_SerialTokenizer;
 
-  const TUint_2 EntityMaxLength = 1;
+  const TUint_2 EntityMaxLength = 3;
 
   TChar EntityBuf[EntityMaxLength + 1];
 
   TMemorySegment Buffer =
     {
-      .Start = (TMemoryPoint) &EntityBuf,
+      .Start = { .Addr = (TUint_2) EntityBuf },
       .Size = sizeof(EntityBuf),
     };
 
