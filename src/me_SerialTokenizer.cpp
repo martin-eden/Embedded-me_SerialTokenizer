@@ -54,7 +54,7 @@ TBool me_SerialTokenizer::GetEntity(
 {
   TEntity Entity = *EntityPtr;
 
-  Entity.Chars = (TChar *) Buffer.Start;
+  Entity.Chars = (TChar *) Buffer.Start.Bytes;
   // Now <Entity.Chars> points to the same memory as <Buffer.Start>
 
   Entity.Length = 0;
@@ -77,7 +77,7 @@ TBool me_SerialTokenizer::GetEntity(
     return false;
 
   // ASCIIZ end
-  Buffer.Start[0] = '\0';
+  Buffer.Start.Bytes[0] = '\0';
 
   PurgeSpaces();
 
@@ -91,13 +91,13 @@ TBool me_SerialTokenizer::GetEntity(
     PurgeCharacter();
 
     // copy character to memory address
-    Buffer.Start[Entity.Length] = Char;
+    Buffer.Start.Bytes[Entity.Length] = Char;
 
     // increase size
     ++Entity.Length;
 
     // write zero for ASCIIZ
-    Buffer.Start[Entity.Length] = '\0';
+    Buffer.Start.Bytes[Entity.Length] = '\0';
 
     // no place to store more?
     TUint_2 EntitySize = Entity.Length + 1;
