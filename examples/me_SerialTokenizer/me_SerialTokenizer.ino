@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-20
+  Last mod.: 2024-05-23
 */
 
 #include <me_SerialTokenizer.h>
@@ -41,37 +41,60 @@ void RunTest()
   using namespace me_MemorySegment;
   using namespace me_SerialTokenizer;
 
-  const TUint_2 EntityMaxLength = 3;
+  const TUint_2 EntityMaxLength = 8;
 
-  TChar EntityBuf[EntityMaxLength + 1];
+  TChar Buffer[EntityMaxLength];
 
-  TMemorySegment Buffer =
+  TMemorySegment BufferSeg =
     {
-      .Start = { .Addr = (TUint_2) EntityBuf },
-      .Size = sizeof(EntityBuf),
+      .Start = { .Addr = (TUint_2) &Buffer },
+      .Size = sizeof(Buffer),
     };
 
-  TEntity Entity;
+  TCapturedEntity Capture;
 
   printf("We are capturing space-separated entries from serial input.\n");
-  printf("Maximum entry length is %u.\n", EntityMaxLength);
-  printf("Try input something..\n");
+  printf("\nMaximum entry length: %u\n\n", EntityMaxLength);
+  printf("Enter something...\n");
 
+  TUint_2 EntityCounter = 0;
   while (true)
   {
-    if (GetEntity(&Entity, Buffer))
+    if (GetEntity(&Capture, BufferSeg))
     {
-      printf("(%s)", Entity.Chars);
-      if (Entity.IsTrimmed)
+      ++EntityCounter;
+
+      printf("[%u] ", EntityCounter);
+
+      printf("%u ", Capture.Segment.Size);
+
+      // note (1)
+      printf("(");
+      fwrite(Capture.Segment.Start.Bytes, Capture.Segment.Size, 1, stdout);
+      printf(")");
+
+      if (Capture.IsTrimmed)
         printf("..");
-      printf(" # %u\n", Entity.Length);
+
+      printf("\n");
     }
   }
 }
+
+/*
+  [1]:
+    Lack of easy way in C to print N bytes as characters is annoying.
+    Let's do fwrite()!
+
+    Related SO's question:
+
+      https://stackoverflow.com/questions/66692599/print-a-string-of-a-given-length
+*/
 
 /*
   2024-05-08
   2024-05-13
   2024-05-17
   2024-05-19
+  2024-05-23
 */

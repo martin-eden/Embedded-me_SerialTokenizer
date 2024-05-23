@@ -6,7 +6,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-19
+  Last mod.: 2024-05-23
 */
 
 #pragma once
@@ -20,30 +20,23 @@ namespace me_SerialTokenizer
   using namespace me_MemorySegment;
 
   /*
-    Entity record
+    Entity result record
 
-      Chars: (char*)
-
-        Pointer to ASCIIZ data.
-
-      Length: ui2
-
-        Length in ASCII characters.
+      Segment: memseg
 
       IsTrimmed: bool
 
         true, when entity would be longer if we had more memory for it
   */
-  struct TEntity
+  struct TCapturedEntity
   {
-    TChar * Chars;
-    TUint_2 Length;
+    TMemorySegment Segment;
     TBool IsTrimmed;
   };
 
   // Get entity from Serial
   TBool GetEntity(
-    TEntity * EnityPtr,
+    TCapturedEntity * EnityPtr,
     TMemorySegment CaptureBuffer
   );
 
@@ -62,4 +55,5 @@ namespace me_SerialTokenizer
   2024-05-08
   2024-05-13
   2024-05-19 entity capture is a custom record
+  2024-05-23 entity is a memseg. capture result is outer record
 */

@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-19
+  Last mod.: 2024-05-23
 */
 
 #include "me_SerialTokenizer.h"
@@ -29,59 +29,38 @@ using namespace me_SerialTokenizer;
 
   Input
 
-    Buffer. Memory segment where we can store bytes. It's size is
-    usually big enough.
+    Buffer. Memory segment where we will store bytes.
 
-    It IS NOT data to parse. We obtaining data to parse from Serial.
+    It IS NOT data to parse. We are obtaining data to parse from Serial.
 
   Output
 
-    Entity record. In this implementation entity data segment starts at
-    the same address as given buffer. But the length of segment is
-    smaller.
-
-  Special cases
-
-    When data stream is longer than available memory to hold entity
-
-      Purge data stream until gap
-      set <.IsTrimmed> flag
+    .Segment - Subsegment in that buffer where we have bytes.
+    .IsTrimmed - Entity would be longer if we had more memory.
 */
 TBool me_SerialTokenizer::GetEntity(
-  TEntity * EntityPtr,
+  TCapturedEntity * EntityPtr,
   TMemorySegment Buffer
 )
 {
-  TEntity Entity = *EntityPtr;
+  TCapturedEntity Result;
 
-  Entity.Chars = (TChar *) Buffer.Start.Bytes;
-  // Now <Entity.Chars> points to the same memory as <Buffer.Start>
+  Result.Segment.Start = Buffer.Start;
+  // Now <Segment> starts at the same memory as <Buffer>
 
-  Entity.Length = 0;
-  Entity.IsTrimmed = false;
+  Result.Segment.Size = 0;
 
-  *EntityPtr = Entity;
+  Result.IsTrimmed = false;
+
+  *EntityPtr = Result;
 
   if (Buffer.Size == 0)
     // you gonna be kidding me!
     return false;
 
-  /*
-    Entity stores data as ASCIIZ. So it's maximum length is one less
-    than buffer size.
-
-    Buffer size = 1 means we don't have any space to get actual
-    data.
-  */
-  if (Buffer.Size == 1)
-    return false;
-
-  // ASCIIZ end
-  Buffer.Start.Bytes[0] = '\0';
-
   PurgeSpaces();
 
-  // Pre condition: buffer size >= 2, stream is empty or at non-space
+  // Pre condition: buffer size >= 1, stream is empty or at non-space
   TChar Char;
   while (PeekCharacter(&Char))
   {
@@ -91,28 +70,24 @@ TBool me_SerialTokenizer::GetEntity(
     PurgeCharacter();
 
     // copy character to memory address
-    Buffer.Start.Bytes[Entity.Length] = Char;
+    Buffer.Start.Bytes[Result.Segment.Size] = Char;
 
     // increase size
-    ++Entity.Length;
-
-    // write zero for ASCIIZ
-    Buffer.Start.Bytes[Entity.Length] = '\0';
+    ++Result.Segment.Size;
 
     // no place to store more?
-    TUint_2 EntitySize = Entity.Length + 1;
-    if (EntitySize == Buffer.Size)
+    if (Result.Segment.Size == Buffer.Size)
     {
-      Entity.IsTrimmed = PurgeEntity();
+      Result.IsTrimmed = PurgeEntity();
 
       break;
     }
   }
   // Post-condition: stream is empty or at space
 
-  *EntityPtr = Entity;
+  *EntityPtr = Result;
 
-  if (Entity.Length == 0)
+  if (Result.Segment.Size == 0)
     return false;
 
   return true;
