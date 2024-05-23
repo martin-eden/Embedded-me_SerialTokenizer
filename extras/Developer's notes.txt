@@ -55,13 +55,8 @@ Interface design notes
         I wondering why in such glorious language base functions
         like memcpy() and memcmp() does not use structures.
 
-        I suspect community is unable to have consensus how to decide
-        how to name fields. But I am free to design code like I want,
-        rare state.
-
-
-
-
+        I suspect community was unable to have consensus how to name
+        fields. But I am free to design code like I want, rare state.
 
 
 ## What to do when we don't have capacity to store entity?
@@ -84,11 +79,7 @@ What our call should return, place into <Entity> and what state of stream?
   true, "12", " 45"
 
     Practical. We trimmed entity "123" to "12". Implemented.
-
-  false, "12", " 45"
-
-    Not bad, but we are forcing our caller to check for empty stream
-    before our call to understand that entry does not fit.
+    Detecting trimmed entity is not ours problem.
 
   true, "45", ""
 
@@ -124,4 +115,4 @@ So 57600 baud is 5760 bytes per second. Less than 12 ms to fill that
 buffer.
 
 
--- Martin, 2024-05-19
+-- Martin, 2024-05-23
