@@ -1,6 +1,21 @@
-256 characters I used to see effect of Stream.setTimeout()
+Pattern I used to see understand meaning of Stream.setTimeout()
 
-0123456789ABCDEF 123456789ABCDEF  23456789ABCDEF   3456789ABCDEF    456789ABCDEF     56789ABCDEF      6789ABCDEF       789ABCDEF        89ABCDEF         9ABCDEF          ABCDEF           BCDEF            CDEF             DEF              EF               F
+0123456789ABCDEF
+ 123456789ABCDEF
+  23456789ABCDEF
+   3456789ABCDEF
+    456789ABCDEF
+     56789ABCDEF
+      6789ABCDEF
+       789ABCDEF
+        89ABCDEF
+         9ABCDEF
+          ABCDEF
+           BCDEF
+            CDEF
+             DEF
+              EF
+               F
 
 Correct output of GetEntity() with entity size 8 is
 
@@ -21,18 +36,15 @@ Correct output of GetEntity() with entity size 8 is
 (EF)
 (F)
 
-That was for setTimeout(1 .. 10). 20 ms are bad.
-
-Theoretically
+Read timeout should be between 1 and 11 ms:
 
   57600 baud == 5760 bytes/s ~= 174 us / byte
 
   64 bytes == 11+ ms
 
+1/5 ms to transfer character. 12 ms to overflow buffer.
+
 That explains data starving at setTimeout(0) and data loss at
 setTimeout(20).
-
-So despite input buffer size of 64 bytes, code can handle longer
-packets. Additional conditions apply.
 
 -- Martin, 2024-05-13
