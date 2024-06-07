@@ -38,7 +38,7 @@ We are capturing space-separated entries from serial input.
 Maximum entry length: 8
 
 Type 'exit' to leave.
-: ds df s da 43l4k3lkerlkds;hjf  3kjdfskjsk exit dkjlsfkld
+ds df s da 43l4k3lkerlkds;hjf  3kjdfskjsk exit dkjlsfkld
 [1] 2 (ds)
 [2] 2 (df)
 [3] 1 (s)

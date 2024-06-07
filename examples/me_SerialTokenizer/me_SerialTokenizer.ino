@@ -63,9 +63,6 @@ void Test()
   TUint_2 EntityCounter = 0;
   while (true)
   {
-    if (!Serial.available())
-      printf(": ");
-
     WaitEntity(&Capture, BufferSeg);
 
     ++EntityCounter;
