@@ -39,6 +39,11 @@ namespace me_SerialTokenizer
     TCapturedEntity * EnityPtr,
     TMemorySegment CaptureBuffer
   );
+  // Wait until non-space characters
+  void WaitEntity(
+    TCapturedEntity * EnityPtr,
+    TMemorySegment CaptureBuffer
+  );
 
   // Implementation
 

@@ -1,14 +1,14 @@
 // Getting entity from Serial
 
 /*
-  "Entity" is a non-gap sequence surrounded by "gaps".
+  "Entity" is a non-gap sequence surrounded by "spaces".
 
-  "Gap" is space character, newline or "end of stream" condition.
+  "Space" is space character, newline or "end of stream" condition.
 */
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-23
+  Last mod.: 2024-06-07
 */
 
 #include "me_SerialTokenizer.h"
@@ -29,14 +29,27 @@ using namespace me_SerialTokenizer;
 
   Input
 
-    Buffer. Memory segment where we will store bytes.
+    TMemorySegment Buffer
 
-    It IS NOT data to parse. We are obtaining data to parse from Serial.
+      Memory segment where we will store bytes.
+
+      It IS NOT data to parse. We are obtaining data to parse from
+      Serial.
 
   Output
 
-    .Segment - Subsegment in that buffer where we have bytes.
-    .IsTrimmed - Entity would be longer if we had more memory.
+    TCapturedEntity
+
+      .Segment - Subsegment in buffer where we have bytes.
+      .IsTrimmed - Entity would be longer if buffer was larger.
+
+  Behavior
+
+    We do not wait for non-space characters.
+
+      If the stream was empty or only spaces were received then
+
+        TCapturedEntity.Segment.Size == 0
 */
 TBool me_SerialTokenizer::GetEntity(
   TCapturedEntity * EntityPtr,
@@ -70,7 +83,7 @@ TBool me_SerialTokenizer::GetEntity(
     PurgeCharacter();
 
     // copy character to memory address
-    Buffer.Start.Bytes[Result.Segment.Size] = Char;
+    Buffer.Bytes[Result.Segment.Size] = Char;
 
     // increase size
     ++Result.Segment.Size;
@@ -91,6 +104,19 @@ TBool me_SerialTokenizer::GetEntity(
     return false;
 
   return true;
+}
+
+/*
+  Wait entity from serial stream
+
+  We will not return until we get something non-empty.
+*/
+void me_SerialTokenizer::WaitEntity(
+  TCapturedEntity * Entity,
+  TMemorySegment Buffer
+)
+{
+  while(!GetEntity(Entity, Buffer));
 }
 
 /*
