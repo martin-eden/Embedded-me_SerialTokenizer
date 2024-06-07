@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-23
+  Last mod.: 2024-06-08
 */
 
 #include <me_SerialTokenizer.h>
@@ -26,70 +26,63 @@ void setup()
   Serial.begin(me_UartSpeeds::Arduino_Normal_Bps);
   Serial.setTimeout(10);
   InstallStandardStreams();
-  printf("[me_SerialTokenizer] Okay, we are here.\n");
 
-  RunTest();
+  printf("[me_SerialTokenizer] Okay, we are here.\n");
+  Test();
+  printf("Done.\n");
 }
 
 void loop()
 {
 }
 
-void RunTest()
+void Test()
 {
-  using namespace me_BaseTypes;
-  using namespace me_MemorySegment;
-  using namespace me_SerialTokenizer;
+  using
+    me_BaseTypes::TChar,
+    me_BaseTypes::TUint_2,
+    me_MemorySegment::TMemorySegment,
+    me_SerialTokenizer::TCapturedEntity,
+    me_SerialTokenizer::WaitEntity;
 
   const TUint_2 EntityMaxLength = 8;
 
   TChar Buffer[EntityMaxLength];
 
-  TMemorySegment BufferSeg =
-    {
-      .Start = { .Addr = (TUint_2) &Buffer },
-      .Size = sizeof(Buffer),
-    };
+  TMemorySegment BufferSeg;
+  BufferSeg.Start.Addr = (TUint_2) &Buffer;
+  BufferSeg.Size = sizeof(Buffer);
 
   TCapturedEntity Capture;
 
   printf("We are capturing space-separated entries from serial input.\n");
-  printf("\nMaximum entry length: %u\n\n", EntityMaxLength);
-  printf("Enter something...\n");
+  printf("Maximum entry length: %u\n", EntityMaxLength);
+  printf("\n");
+  printf("Type 'exit' to leave.\n");
 
   TUint_2 EntityCounter = 0;
   while (true)
   {
-    if (GetEntity(&Capture, BufferSeg))
-    {
-      ++EntityCounter;
+    if (!Serial.available())
+      printf(": ");
 
-      printf("[%u] ", EntityCounter);
+    WaitEntity(&Capture, BufferSeg);
 
-      printf("%u ", Capture.Segment.Size);
+    ++EntityCounter;
 
-      // note (1)
-      printf("(");
-      fwrite(Capture.Segment.Start.Bytes, Capture.Segment.Size, 1, stdout);
-      printf(")");
+    printf("[%u] ", EntityCounter);
+    printf("%u ", Capture.Segment.Size);
+    printf("(");
+    Capture.Segment.Print();
+    printf(")");
+    if (Capture.IsTrimmed)
+      printf("..");
+    printf("\n");
 
-      if (Capture.IsTrimmed)
-        printf("..");
-
-      printf("\n");
-    }
+    if (Capture.Segment.IsEqualTo("exit"))
+      break;
   }
 }
-
-/*
-  [1]:
-    Lack of easy way in C to print N bytes as characters is annoying.
-    Let's do fwrite()!
-
-    Related SO's question:
-
-      https://stackoverflow.com/questions/66692599/print-a-string-of-a-given-length
-*/
 
 /*
   2024-05-08
@@ -97,4 +90,5 @@ void RunTest()
   2024-05-17
   2024-05-19
   2024-05-23
+  2024-06-08
 */
