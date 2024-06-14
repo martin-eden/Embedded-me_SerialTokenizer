@@ -36,12 +36,12 @@ namespace me_SerialTokenizer
 
   // Get entity from Serial
   TBool GetEntity(
-    TCapturedEntity * EnityPtr,
+    TCapturedEntity * EntityPtr,
     TMemorySegment CaptureBuffer
   );
-  // Wait until non-space characters
+  // Wait until we get something
   void WaitEntity(
-    TCapturedEntity * EnityPtr,
+    TCapturedEntity * EntityPtr,
     TMemorySegment CaptureBuffer
   );
 
