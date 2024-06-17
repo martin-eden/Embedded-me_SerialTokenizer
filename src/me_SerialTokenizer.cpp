@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-06-07
+  Last mod.: 2024-06-17
 */
 
 #include "me_SerialTokenizer.h"
@@ -73,7 +73,7 @@ TBool me_SerialTokenizer::GetEntity(
 
   PurgeSpaces();
 
-  // Pre condition: buffer size >= 1, stream is empty or at non-space
+  // Pre-condition: buffer size >= 1, stream is empty or at non-space
   TChar Char;
   while (PeekCharacter(&Char))
   {
@@ -116,7 +116,7 @@ void me_SerialTokenizer::WaitEntity(
   TMemorySegment Buffer
 )
 {
-  while(!GetEntity(Entity, Buffer));
+  while (!GetEntity(Entity, Buffer));
 }
 
 /*
