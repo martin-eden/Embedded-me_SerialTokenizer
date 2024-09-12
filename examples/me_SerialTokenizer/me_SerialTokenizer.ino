@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-06-08
+  Last mod.: 2024-09-12
 */
 
 #include <me_SerialTokenizer.h>
@@ -39,8 +39,6 @@ void loop()
 void Test()
 {
   using
-    me_BaseTypes::TChar,
-    me_BaseTypes::TUint_2,
     me_MemorySegment::TMemorySegment,
     me_SerialTokenizer::TCapturedEntity,
     me_SerialTokenizer::WaitEntity;
