@@ -6,7 +6,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-05-23
+  Last mod.: 2024-09-12
 */
 
 #pragma once
@@ -16,7 +16,6 @@
 
 namespace me_SerialTokenizer
 {
-  using namespace me_BaseTypes;
   using namespace me_MemorySegment;
 
   /*

@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-06-17
+  Last mod.: 2024-09-12
 */
 
 #include "me_SerialTokenizer.h"
@@ -20,7 +20,6 @@
 #include <me_MemorySegment.h>
 #include <me_BaseTypes.h>
 
-using namespace me_BaseTypes;
 using namespace me_MemorySegment;
 using namespace me_SerialTokenizer;
 
