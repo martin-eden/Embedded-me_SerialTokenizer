@@ -1,4 +1,4 @@
-Pattern I used to see understand meaning of Stream.setTimeout()
+Pattern I've used to observe effect of Stream.setTimeout()
 
 0123456789ABCDEF
  123456789ABCDEF
