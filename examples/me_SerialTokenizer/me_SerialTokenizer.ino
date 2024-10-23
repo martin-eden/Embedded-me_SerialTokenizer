@@ -8,15 +8,16 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-12
+  Last mod.: 2024-10-23
 */
 
 #include <me_SerialTokenizer.h>
 #include <me_MemorySegment.h>
 
-#include <me_InstallStandardStreams.h>
 #include <me_UartSpeeds.h>
 #include <me_BaseTypes.h>
+
+#include <me_Console.h>
 
 // Forwards
 void RunTest();
@@ -25,11 +26,10 @@ void setup()
 {
   Serial.begin(me_UartSpeeds::Arduino_Normal_Bps);
   Serial.setTimeout(10);
-  InstallStandardStreams();
 
-  printf("[me_SerialTokenizer] Okay, we are here.\n");
+  Console.Print("[me_SerialTokenizer] Okay, we are here.");
   Test();
-  printf("Done.\n");
+  Console.Print("[me_SerialTokenizer] Done.");
 }
 
 void loop()
@@ -40,6 +40,9 @@ void Test()
 {
   using
     me_MemorySegment::TMemorySegment,
+    me_MemorySegment::Freetown::FromAddrSize,
+    me_MemorySegment::Freetown::FromAsciiz,
+    me_MemorySegment::Freetown::AreEqual,
     me_SerialTokenizer::TCapturedEntity,
     me_SerialTokenizer::WaitEntity;
 
@@ -47,34 +50,30 @@ void Test()
 
   TChar Buffer[EntityMaxLength];
 
-  TMemorySegment BufferSeg;
-  BufferSeg.Start.Addr = (TUint_2) &Buffer;
-  BufferSeg.Size = sizeof(Buffer);
+  TMemorySegment BufferSeg = FromAddrSize((TUint_2) &Buffer, sizeof(Buffer));
 
   TCapturedEntity Capture;
 
-  printf("We are capturing space-separated entries from serial input.\n");
-  printf("Maximum entry length: %u\n", EntityMaxLength);
-  printf("\n");
-  printf("Type 'exit' to leave.\n");
+  Console.Print("We are capturing space-separated entries from serial input.");
+  Console.Write("Maximum entry length:");
+  Console.Print(EntityMaxLength);
+  Console.EndLine();
+  Console.EndLine();
+  Console.Print("Type 'exit' to leave.");
 
-  TUint_2 EntityCounter = 0;
+  TMemorySegment ExitText = FromAsciiz("exit");
   while (true)
   {
     WaitEntity(&Capture, BufferSeg);
 
-    ++EntityCounter;
-
-    printf("[%u] ", EntityCounter);
-    printf("%u ", Capture.Segment.Size);
-    printf("(");
-    Capture.Segment.Print();
-    printf(")");
+    Console.Write("Contents (");
+    Console.Write(Capture.Segment);
+    Console.Write(")");
     if (Capture.IsTrimmed)
-      printf("..");
-    printf("\n");
+      Console.Write(" IsTrimmed");
+    Console.EndLine();
 
-    if (Capture.Segment.IsEqualTo("exit"))
+    if (AreEqual(Capture.Segment, ExitText))
       break;
   }
 }
@@ -86,4 +85,5 @@ void Test()
   2024-05-19
   2024-05-23
   2024-06-08
+  2024-10-23
 */
