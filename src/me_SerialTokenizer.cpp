@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-12
+  Last mod.: 2024-10-23
 */
 
 #include "me_SerialTokenizer.h"
@@ -57,7 +57,7 @@ TBool me_SerialTokenizer::GetEntity(
 {
   TCapturedEntity Result;
 
-  Result.Segment.Start = Buffer.Start;
+  Result.Segment.Addr = Buffer.Addr;
   // Now <Segment> starts at the same memory as <Buffer>
 
   Result.Segment.Size = 0;
