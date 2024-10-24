@@ -38,6 +38,7 @@ namespace me_SerialTokenizer
     TCapturedEntity * EntityPtr,
     TMemorySegment CaptureBuffer
   );
+
   // Wait until we get something
   void WaitEntity(
     TCapturedEntity * EntityPtr,
