@@ -8,20 +8,45 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-23
+  Last mod.: 2024-10-25
 */
 
 #include "me_SerialTokenizer.h"
 
 #include <HardwareSerial.h> // Serial: available(), peek(), getTimeout(), read()
 #include <Arduino.h> // delay()
-#include <ctype.h> // isspace()
 
 #include <me_MemorySegment.h>
 #include <me_BaseTypes.h>
 
-using namespace me_MemorySegment;
 using namespace me_SerialTokenizer;
+
+using
+  me_MemorySegment::TMemorySegment;
+
+/*
+  Return true if character is newline or space
+
+  Fuck that C standard library! Their isspace()
+  takes signed word and returns some other signed word.
+  Non-zero if it is space. For (\n) it returns 252.
+  V3ry k3wl d00dz1
+*/
+TBool IsSpace(
+  TChar Char
+)
+{
+  if (
+    (Char == ' ') ||
+    (Char == '\n') ||
+    (Char == '\r') ||
+    (Char == '\t') ||
+    (Char == '\v')
+  )
+    return true;
+
+  return false;
+}
 
 /*
   Get entity from serial stream.
@@ -76,7 +101,7 @@ TBool me_SerialTokenizer::GetEntity(
   TChar Char;
   while (PeekCharacter(&Char))
   {
-    if (isspace(Char))
+    if (IsSpace(Char))
       break;
 
     PurgeCharacter();
@@ -132,7 +157,7 @@ void me_SerialTokenizer::PurgeSpaces()
     if (!PeekCharacter(&Char))
       return;
 
-    if (!isspace(Char))
+    if (!IsSpace(Char))
       return;
 
     PurgeCharacter();
@@ -224,4 +249,5 @@ TBool me_SerialTokenizer::PurgeEntity()
   2024-05-08
   2024-05-13
   2024-05-19 [>~] Interface arguments are records now
+  2024-10-24 Homebrew IsSpace()
 */
