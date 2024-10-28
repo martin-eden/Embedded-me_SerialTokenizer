@@ -1,10 +1,55 @@
 # What
 
-(2024-05, 2024-06)
+(2024-05, 2024-06, 2024-10)
 
 Arduino library to get "entity" from Serial.
 
 "Entity" is something surrounded by spaces.
+
+## Example interaction
+
+Example is getting entities which are no longer than `8` characters and
+adds them to list.
+
+When entity is `print`, list is printed.
+
+Here we're pasting greeting text up to word `print`. List is printed.
+
+It proves we can handle long inputs.
+
+```
+[me_SerialTokenizer] Okay, we are here.
+We are capturing space-separated entries from serial input.
+Maximum entry length: 00008
+Type 'print' to print list.
+Type 'clear' remove items from list.
+Type 'exit' to leave.
+me_SerialTokenizer] Okay, we are here.
+We are capturing space-separated entries from serial input.
+Maximum entry length: 00008
+Type 'print' to print list.
+--
+  Okay,
+  we
+  are
+  here.
+  We
+  are
+  entries
+  from
+  serial
+  input.
+  Maximum
+  entry
+  length:
+  00008
+  Type
+  'print'
+  to
+==
+exit
+[me_SerialTokenizer] Done.
+```
 
 ## Requirements
 
@@ -22,38 +67,29 @@ Run [Install.sh](Install.sh).
 Run [Remove.sh](Remove.sh).
 
 
-## Details
+## Compile
 
-Warningless compilation (-std=c++1z):
+Zero-warnings compilation:
 
 ```bash
-arduino-cli compile . --fqbn arduino:avr:uno --quiet --warnings all --build-property compiler.cpp.extra_flags="-std=c++1z"
+arduino-cli compile --fqbn arduino:avr:uno --quiet --warnings all . --build-property compiler.cpp.extra_flags="-std=c++1z"
 ```
 
-Sample output:
+## Code
 
-```
-[me_SerialTokenizer] Okay, we are here.
-We are capturing space-separated entries from serial input.
-Maximum entry length: 8
-
-Type 'exit' to leave.
-ds df s da 43l4k3lkerlkds;hjf  3kjdfskjsk exit dkjlsfkld
-[1] 2 (ds)
-[2] 2 (df)
-[3] 1 (s)
-[4] 2 (da)
-[5] 8 (43l4k3lk)..
-[6] 8 (3kjdfskj)..
-[7] 4 (exit)
-Done.
-```
-
-[Example](examples/me_SerialTokenizer/me_SerialTokenizer.ino)
-
-[Code](src/me_SerialTokenizer.cpp)
+* [Example][Example]
+* [Interface][Interface]
+* [Implementation][Implementation]
 
 
 ## See also
 
-[My other repositories](https://github.com/martin-eden/contents).
+* [My other embedded C++ libraries][Embedded]
+* [My other repositories][Repos]
+
+[Example]: examples/me_SerialTokenizer/me_SerialTokenizer.ino
+[Interface]: src/me_SerialTokenizer.h
+[Implementation]: src/me_SerialTokenizer.cpp
+
+[Embedded]: https://github.com/martin-eden/Embedded_Crafts/tree/master/Parts
+[Repos]: https://github.com/martin-eden/contents
