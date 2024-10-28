@@ -6,7 +6,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-09-12
+  Last mod.: 2024-10-28
 */
 
 #pragma once
@@ -16,44 +16,39 @@
 
 namespace me_SerialTokenizer
 {
-  using namespace me_MemorySegment;
-
-  /*
-    Entity result record
-
-      Segment: memseg
-
-      IsTrimmed: bool
-
-        true, when entity would be longer if we had more memory for it
-  */
-  struct TCapturedEntity
+  class TSerialTokenizer
   {
-    TMemorySegment Segment;
-    TBool IsTrimmed;
+    public:
+      // Time to wait for character on empty stream
+      TUint_2 BreakTimeout_ms = 15;
+
+      // Get entity from UART
+      TBool GetEntity(
+        me_MemorySegment::TMemorySegment * Capture,
+        me_MemorySegment::TMemorySegment Buffer
+      );
+
+      // Wait until we get something
+      void WaitEntity(
+        me_MemorySegment::TMemorySegment * Capture,
+        me_MemorySegment::TMemorySegment Buffer
+      );
+
+    protected:
+      TBool HasPeekCharacter = false;
+      TChar PeekCharacter;
+
+      TBool RetrievePeekCharacter() __attribute__((optimize("O0")));
+      void PurgePeekCharacter();
+      void PurgeSpaces();
+      TBool PurgeEntity();
   };
 
-  // Get entity from Serial
-  TBool GetEntity(
-    TCapturedEntity * EntityPtr,
-    TMemorySegment CaptureBuffer
-  );
-
-  // Wait until we get something
-  void WaitEntity(
-    TCapturedEntity * EntityPtr,
-    TMemorySegment CaptureBuffer
-  );
-
-  // Implementation
-
-  TBool StreamIsEmpty();
-  TBool StockPeek(TChar * Char);
-  TBool PeekCharacter(TChar * Char);
-
-  void PurgeCharacter();
-  void PurgeSpaces();
-  TBool PurgeEntity();
+  // Freetown
+  namespace Freetown
+  {
+    TBool IsSpace(TChar Char);
+  }
 }
 
 /*
@@ -61,4 +56,8 @@ namespace me_SerialTokenizer
   2024-05-13
   2024-05-19 entity capture is a custom record
   2024-05-23 entity is a memseg. capture result is outer record
+  2024-10-27
+    [~] Switching to [me_Uart] from [HardwareSerial]
+    [/] It is class now because I need to store timeout somewhere
+    [-] Dropped TCapturedEntity. Usage overhead and no need
 */
