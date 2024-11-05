@@ -9,12 +9,13 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-27
+  Last mod.: 2024-11-05
 */
+
+#include <me_Uart.h>
 
 #include <me_BaseTypes.h>
 #include <me_UartSpeeds.h>
-#include <me_Uart.h>
 #include <me_MemorySegment.h>
 #include <me_Console.h>
 #include <me_SerialTokenizer.h>
@@ -25,7 +26,7 @@ void RunTest();
 
 void setup()
 {
-  me_Uart::Init(me_UartSpeeds::Arduino_Normal_Bps);
+  me_Uart::Init(me_UartSpeeds::Bps_57k);
 
   Console.Print("[me_SerialTokenizer] Okay, we are here.");
   Test();
