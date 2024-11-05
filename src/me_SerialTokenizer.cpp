@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-27
+  Last mod.: 2024-11-05
 */
 
 #include "me_SerialTokenizer.h"
@@ -16,6 +16,8 @@
 #include <me_BaseTypes.h>
 #include <me_MemorySegment.h>
 #include <me_Uart.h>
+
+#include <Arduino.h> // for millis()
 
 using namespace me_SerialTokenizer;
 
@@ -149,16 +151,21 @@ TBool TSerialTokenizer::RetrievePeekCharacter()
     return true;
 
   TUint_1 Byte;
-  HasPeekCharacter = me_Uart::AwaitByte(&Byte, BreakTimeout_ms);
+  TUint_4 WaitStopTime = millis() + BreakTimeout_ms;
 
-  if (HasPeekCharacter)
+  while (true)
   {
-    PeekCharacter = (TChar) Byte;
+    if (me_Uart::ReceiveByte(&Byte))
+    {
+      PeekCharacter = (TChar) Byte;
+      HasPeekCharacter = true;
 
-    return true;
+      return true;
+    }
+
+    if (millis() >= WaitStopTime)
+      return false;
   }
-
-  return false;
 }
 
 /*
@@ -253,4 +260,5 @@ TBool Freetown::IsSpace(
   2024-05-19 [~] Interface arguments are records now
   2024-10-24 Homebrew IsSpace()
   2024-10-27 [~] Switching to [me_Uart]. Goodbye [HardwareSerial]!
+  2024-11-05
 */
