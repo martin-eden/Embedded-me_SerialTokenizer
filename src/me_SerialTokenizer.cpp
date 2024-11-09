@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-11-05
+  Last mod.: 2024-11-09
 */
 
 #include "me_SerialTokenizer.h"
@@ -155,7 +155,7 @@ TBool TSerialTokenizer::RetrievePeekCharacter()
 
   while (true)
   {
-    if (me_Uart::ReceiveByte(&Byte))
+    if (me_Uart::GetByte(&Byte))
     {
       PeekCharacter = (TChar) Byte;
       HasPeekCharacter = true;
