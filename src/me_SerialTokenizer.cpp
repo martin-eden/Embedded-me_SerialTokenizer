@@ -8,7 +8,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-11-09
+  Last mod.: 2024-12-12
 */
 
 #include "me_SerialTokenizer.h"
@@ -157,7 +157,7 @@ TBool TSerialTokenizer::RetrievePeekCharacter()
   {
     if (me_Uart::GetByte(&Byte))
     {
-      PeekCharacter = (TChar) Byte;
+      PeekCharacter = Byte;
       HasPeekCharacter = true;
 
       return true;
@@ -238,7 +238,7 @@ TBool TSerialTokenizer::PurgeEntity()
   Not zero, no questions.
 */
 TBool Freetown::IsSpace(
-  TChar Char
+  TUint_1 Char
 )
 {
   if (

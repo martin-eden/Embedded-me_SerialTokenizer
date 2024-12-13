@@ -6,7 +6,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-10-28
+  Last mod.: 2024-12-12
 */
 
 #pragma once
@@ -36,7 +36,7 @@ namespace me_SerialTokenizer
 
     protected:
       TBool HasPeekCharacter = false;
-      TChar PeekCharacter;
+      TUint_1 PeekCharacter;
 
       TBool RetrievePeekCharacter() __attribute__((optimize("O0")));
       void PurgePeekCharacter();
@@ -47,7 +47,7 @@ namespace me_SerialTokenizer
   // Freetown
   namespace Freetown
   {
-    TBool IsSpace(TChar Char);
+    TBool IsSpace(TUint_1 Char);
   }
 }
 
