@@ -1,20 +1,18 @@
 // Getting entity from Serial
 
 /*
+  Author: Martin Eden
+  Last mod.: 2024-12-20
+*/
+
+/*
   "Entity" is a non-gap sequence surrounded by "spaces".
 
   "Space" is space character, newline or "end of stream" condition.
 */
 
-/*
-  Author: Martin Eden
-  Last mod.: 2024-12-12
-*/
+#include <me_SerialTokenizer.h>
 
-#include "me_SerialTokenizer.h"
-
-#include <me_BaseTypes.h>
-#include <me_MemorySegment.h>
 #include <me_Uart.h>
 
 #include <Arduino.h> // for millis()
