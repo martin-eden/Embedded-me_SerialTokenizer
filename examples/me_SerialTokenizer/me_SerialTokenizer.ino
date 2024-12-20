@@ -1,6 +1,11 @@
 // Stream tokenizer demo
 
 /*
+  Author: Martin Eden
+  Last mod.: 2024-12-20
+*/
+
+/*
   Enter random space/newline separated strings.
 
   Non-space sequences are caught, added to list and
@@ -8,16 +13,25 @@
 */
 
 /*
-  Author: Martin Eden
-  Last mod.: 2024-11-05
+  FIXME
+
+    Double "clear" and then "print" prints infinite "clear" string.
+    Need to investigate
+
+      > clear
+      > clear
+      > print
+      < clear
+      < clear
+      < ...
+
+    -- Martin, 2024-12-20
 */
 
-#include <me_Uart.h>
-
 #include <me_BaseTypes.h>
-#include <me_UartSpeeds.h>
-#include <me_MemorySegment.h>
+#include <me_Uart.h>
 #include <me_Console.h>
+#include <me_MemorySegment.h>
 #include <me_SerialTokenizer.h>
 #include <me_Menu.h>
 
@@ -26,7 +40,7 @@ void RunTest();
 
 void setup()
 {
-  me_Uart::Init(me_UartSpeeds::Bps_57k);
+  me_Uart::Init(me_Uart::Speed_115k_Bps);
 
   Console.Print("[me_SerialTokenizer] Okay, we are here.");
   Test();
@@ -46,7 +60,7 @@ void Test()
 
   const TUint_2 EntityMaxLength = 8;
 
-  TChar Buffer[EntityMaxLength];
+  TUint_1 Buffer[EntityMaxLength];
 
   TMemorySegment BufferSeg =
     FromAddrSize((TUint_2) &Buffer, sizeof(Buffer));
@@ -160,12 +174,8 @@ void ReleaseList(
 }
 
 /*
-  2024-05-08
-  2024-05-13
-  2024-05-17
-  2024-05-19
-  2024-05-23
-  2024-06-08
-  2024-10-23
-  2024-10-27
+  2024-05 # # # # #
+  2024-06 #
+  2024-10 #
+  2024-10 #
 */
