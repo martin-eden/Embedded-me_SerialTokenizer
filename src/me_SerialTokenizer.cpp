@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-12-20
+  Last mod.: 2025-08-26
 */
 
 /*
@@ -13,14 +13,15 @@
 
 #include <me_SerialTokenizer.h>
 
+#include <me_BaseTypes.h>
+#include <me_MemorySegment.h>
 #include <me_Uart.h>
+#include <me_Streams.h>
+#include <me_WorkMemory.h>
 
 #include <Arduino.h> // for millis()
 
 using namespace me_SerialTokenizer;
-
-using
-  me_MemorySegment::TMemorySegment;
 
 /*
   Get entity from serial stream.
@@ -56,15 +57,15 @@ using
         Capture.Size == 0
 */
 TBool TSerialTokenizer::GetEntity(
-  TMemorySegment * Capture,
-  TMemorySegment Buffer
+  me_MemorySegment::TMemorySegment * Capture,
+  me_MemorySegment::TMemorySegment Buffer
 )
 {
-  if (Buffer.Size == 0)
-    // you gonna be kidding me!
-    return false;
+  me_WorkMemory::TOutputStream Buff_Stream;
+  me_MemorySegment::TMemorySegment Result;
 
-  TMemorySegment Result;
+  if (!Buff_Stream.Init(Buffer))
+    return false;
 
   // <Result> points to the same memory as <Buffer>
   Result.Addr = Buffer.Addr;
@@ -82,8 +83,7 @@ TBool TSerialTokenizer::GetEntity(
   // Pre-condition: stream is at non-space
   while (true)
   {
-    // Copy character to memory address
-    Buffer.Bytes[Result.Size] = PeekCharacter;
+    Buff_Stream.Write(PeekCharacter);
 
     PurgePeekCharacter();
 
@@ -123,8 +123,8 @@ TBool TSerialTokenizer::GetEntity(
   We will not return until we get something non-empty.
 */
 void TSerialTokenizer::WaitEntity(
-  TMemorySegment * Capture,
-  TMemorySegment Buffer
+  me_MemorySegment::TMemorySegment * Capture,
+  me_MemorySegment::TMemorySegment Buffer
 )
 {
   while (!GetEntity(Capture, Buffer));
@@ -253,10 +253,6 @@ TBool Freetown::IsSpace(
 
 
 /*
-  2024-05-08
-  2024-05-13
-  2024-05-19 [~] Interface arguments are records now
-  2024-10-24 Homebrew IsSpace()
-  2024-10-27 [~] Switching to [me_Uart]. Goodbye [HardwareSerial]!
-  2024-11-05
+  2024 # # # # # #
+  2025-08-26
 */
