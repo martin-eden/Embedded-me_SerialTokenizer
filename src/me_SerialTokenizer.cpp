@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2025-08-26
+  Last mod.: 2025-08-27
 */
 
 /*
@@ -14,7 +14,6 @@
 #include <me_SerialTokenizer.h>
 
 #include <me_BaseTypes.h>
-#include <me_MemorySegment.h>
 #include <me_Uart.h>
 #include <me_Streams.h>
 #include <me_WorkMemory.h>
@@ -57,12 +56,12 @@ using namespace me_SerialTokenizer;
         Capture.Size == 0
 */
 TBool TSerialTokenizer::GetEntity(
-  me_MemorySegment::TMemorySegment * Capture,
-  me_MemorySegment::TMemorySegment Buffer
+  TAddressSegment * Capture,
+  TAddressSegment Buffer
 )
 {
   me_WorkMemory::TOutputStream Buff_Stream;
-  me_MemorySegment::TMemorySegment Result;
+  TAddressSegment Result;
 
   if (!Buff_Stream.Init(Buffer))
     return false;
@@ -123,8 +122,8 @@ TBool TSerialTokenizer::GetEntity(
   We will not return until we get something non-empty.
 */
 void TSerialTokenizer::WaitEntity(
-  me_MemorySegment::TMemorySegment * Capture,
-  me_MemorySegment::TMemorySegment Buffer
+  TAddressSegment * Capture,
+  TAddressSegment Buffer
 )
 {
   while (!GetEntity(Capture, Buffer));

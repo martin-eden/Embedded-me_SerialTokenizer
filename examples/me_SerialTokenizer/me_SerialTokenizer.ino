@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-12-20
+  Last mod.: 2025-08-27
 */
 
 /*
@@ -26,10 +26,14 @@
       < ...
 
     -- Martin, 2024-12-20
+
+    This ancient code is still broken. Need to investigate (or review
+    design).
+
+    -- Martin, 2025-08-27
 */
 
 #include <me_BaseTypes.h>
-#include <me_Uart.h>
 #include <me_Console.h>
 #include <me_MemorySegment.h>
 #include <me_SerialTokenizer.h>
@@ -40,7 +44,7 @@ void RunTest();
 
 void setup()
 {
-  me_Uart::Init(me_Uart::Speed_115k_Bps);
+  Console.Init();
 
   Console.Print("[me_SerialTokenizer] Okay, we are here.");
   Test();
@@ -54,7 +58,6 @@ void loop()
 void Test()
 {
   using
-    me_MemorySegment::TMemorySegment,
     me_MemorySegment::Freetown::FromAddrSize,
     me_SerialTokenizer::TSerialTokenizer;
 
@@ -62,10 +65,10 @@ void Test()
 
   TUint_1 Buffer[EntityMaxLength];
 
-  TMemorySegment BufferSeg =
+  TAddressSegment BufferSeg =
     FromAddrSize((TUint_2) &Buffer, sizeof(Buffer));
 
-  TMemorySegment Capture;
+  TAddressSegment Capture;
 
   Console.Print("We are capturing space-separated entries from serial input.");
   Console.Write("Maximum entry length:");
@@ -105,51 +108,50 @@ void Test()
 }
 
 TBool IsExitCommand(
-  me_MemorySegment::TMemorySegment Text
+  TAddressSegment Text
 )
 {
   using
     me_MemorySegment::Freetown::FromAsciiz,
-    me_MemorySegment::Freetown::AreEqual;
+    me_MemorySegment::AreEqual;
 
   return AreEqual(Text, FromAsciiz("exit"));
 }
 
 TBool IsClearCommand(
-  me_MemorySegment::TMemorySegment Text
+  TAddressSegment Text
 )
 {
   using
     me_MemorySegment::Freetown::FromAsciiz,
-    me_MemorySegment::Freetown::AreEqual;
+    me_MemorySegment::AreEqual;
 
   return AreEqual(Text, FromAsciiz("clear"));
 }
 
 TBool IsPrintCommand(
-  me_MemorySegment::TMemorySegment Text
+  TAddressSegment Text
 )
 {
   using
     me_MemorySegment::Freetown::FromAsciiz,
-    me_MemorySegment::Freetown::AreEqual;
+    me_MemorySegment::AreEqual;
 
   return AreEqual(Text, FromAsciiz("print"));
 }
 
 void AddToList(
   me_Menu::TMenu * List,
-  me_MemorySegment::TMemorySegment Item
+  TAddressSegment Item
 )
 {
   using
-    me_MemorySegment::TMemorySegment,
     me_MemorySegment::Freetown::Reserve,
     me_MemorySegment::Freetown::CopyMemTo,
     me_Menu::TMenuItem,
     me_Menu::Freetown::ToItem;
 
-  TMemorySegment CommandSeg;
+  TAddressSegment CommandSeg;
   Reserve(&CommandSeg, Item.Size);
   CopyMemTo(CommandSeg, Item);
 
@@ -174,8 +176,5 @@ void ReleaseList(
 }
 
 /*
-  2024-05 # # # # #
-  2024-06 #
-  2024-10 #
-  2024-10 #
+  2024 # # # # # # # #
 */

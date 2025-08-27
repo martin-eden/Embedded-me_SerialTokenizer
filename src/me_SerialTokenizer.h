@@ -6,13 +6,12 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2024-12-12
+  Last mod.: 2025-08-27
 */
 
 #pragma once
 
 #include <me_BaseTypes.h>
-#include <me_MemorySegment.h>
 
 namespace me_SerialTokenizer
 {
@@ -24,14 +23,14 @@ namespace me_SerialTokenizer
 
       // Get entity from UART
       TBool GetEntity(
-        me_MemorySegment::TMemorySegment * Capture,
-        me_MemorySegment::TMemorySegment Buffer
+        TAddressSegment * Capture,
+        TAddressSegment Buffer
       );
 
       // Wait until we get something
       void WaitEntity(
-        me_MemorySegment::TMemorySegment * Capture,
-        me_MemorySegment::TMemorySegment Buffer
+        TAddressSegment * Capture,
+        TAddressSegment Buffer
       );
 
     protected:
