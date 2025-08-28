@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2025-08-27
+  Last mod.: 2025-08-29
 */
 
 /*
@@ -57,28 +57,26 @@ void loop()
 
 void Test()
 {
-  using
-    me_MemorySegment::Freetown::FromAddrSize,
-    me_SerialTokenizer::TSerialTokenizer;
-
   const TUint_2 EntityMaxLength = 8;
 
   TUint_1 Buffer[EntityMaxLength];
 
   TAddressSegment BufferSeg =
-    FromAddrSize((TUint_2) &Buffer, sizeof(Buffer));
+    { .Addr = (TAddress) &Buffer, .Size = sizeof(Buffer) };
 
   TAddressSegment Capture;
 
   Console.Print("We are capturing space-separated entries from serial input.");
+
   Console.Write("Maximum entry length:");
   Console.Print(BufferSeg.Size);
   Console.EndLine();
+
   Console.Print("Type 'print' to print list.");
   Console.Print("Type 'clear' remove items from list.");
   Console.Print("Type 'exit' to leave.");
 
-  TSerialTokenizer Tokenizer;
+  me_SerialTokenizer::TSerialTokenizer Tokenizer;
   Tokenizer.BreakTimeout_ms = 5000;
   /*
     We're using [me_Menu] just to store and print list of strings.
