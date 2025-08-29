@@ -39,7 +39,6 @@
 #include <me_Console.h>
 #include <me_Menu.h>
 
-#include <me_MemorySegment.h>
 #include <me_WorkmemTools.h>
 
 // Forwards
@@ -113,7 +112,7 @@ TBool IsExitCommand(
 )
 {
   using
-    me_MemorySegment::FromAsciiz,
+    me_WorkmemTools::FromAsciiz,
     me_WorkmemTools::AreEqual;
 
   return AreEqual(Text, FromAsciiz("exit"));
@@ -124,7 +123,7 @@ TBool IsClearCommand(
 )
 {
   using
-    me_MemorySegment::FromAsciiz,
+    me_WorkmemTools::FromAsciiz,
     me_WorkmemTools::AreEqual;
 
   return AreEqual(Text, FromAsciiz("clear"));
@@ -135,7 +134,7 @@ TBool IsPrintCommand(
 )
 {
   using
-    me_MemorySegment::FromAsciiz,
+    me_WorkmemTools::FromAsciiz,
     me_WorkmemTools::AreEqual;
 
   return AreEqual(Text, FromAsciiz("print"));
