@@ -33,11 +33,14 @@
     -- Martin, 2025-08-27
 */
 
+#include <me_SerialTokenizer.h>
+
 #include <me_BaseTypes.h>
 #include <me_Console.h>
-#include <me_MemorySegment.h>
-#include <me_SerialTokenizer.h>
 #include <me_Menu.h>
+
+#include <me_MemorySegment.h>
+#include <me_WorkmemTools.h>
 
 // Forwards
 void RunTest();
@@ -110,8 +113,8 @@ TBool IsExitCommand(
 )
 {
   using
-    me_MemorySegment::Freetown::FromAsciiz,
-    me_MemorySegment::AreEqual;
+    me_MemorySegment::FromAsciiz,
+    me_WorkmemTools::AreEqual;
 
   return AreEqual(Text, FromAsciiz("exit"));
 }
@@ -121,8 +124,8 @@ TBool IsClearCommand(
 )
 {
   using
-    me_MemorySegment::Freetown::FromAsciiz,
-    me_MemorySegment::AreEqual;
+    me_MemorySegment::FromAsciiz,
+    me_WorkmemTools::AreEqual;
 
   return AreEqual(Text, FromAsciiz("clear"));
 }
@@ -132,8 +135,8 @@ TBool IsPrintCommand(
 )
 {
   using
-    me_MemorySegment::Freetown::FromAsciiz,
-    me_MemorySegment::AreEqual;
+    me_MemorySegment::FromAsciiz,
+    me_WorkmemTools::AreEqual;
 
   return AreEqual(Text, FromAsciiz("print"));
 }
@@ -143,17 +146,12 @@ void AddToList(
   TAddressSegment Item
 )
 {
-  using
-    me_MemorySegment::Freetown::Reserve,
-    me_MemorySegment::Freetown::CopyMemTo,
-    me_Menu::TMenuItem,
-    me_Menu::Freetown::ToItem;
-
   TAddressSegment CommandSeg;
-  Reserve(&CommandSeg, Item.Size);
-  CopyMemTo(CommandSeg, Item);
+  me_Menu::TMenuItem MenuItem;
 
-  TMenuItem MenuItem;
+  me_WorkmemTools::Reserve(&CommandSeg, Item.Size);
+  me_WorkmemTools::CopyMemTo(CommandSeg, Item);
+
   MenuItem.Command = CommandSeg;
 
   List->AddItem(MenuItem);

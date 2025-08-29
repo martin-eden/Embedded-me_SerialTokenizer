@@ -2,11 +2,11 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2025-08-28
+  Last mod.: 2025-08-29
 */
 
 /*
-  "Entity" is a non-gap sequence surrounded by "spaces".
+  "Entity" is a sequence surrounded by "spaces".
 
   "Space" is space character, newline or "end of stream" condition.
 */
@@ -16,7 +16,7 @@
 #include <me_BaseTypes.h>
 #include <me_Uart.h>
 #include <me_StreamTools.h>
-#include <me_WorkMemory.h>
+#include <me_StreamsCollection.h>
 
 #include <Arduino.h> // for millis()
 
@@ -60,7 +60,7 @@ TBool TSerialTokenizer::GetEntity(
   TAddressSegment Buffer
 )
 {
-  me_WorkMemory::TOutputStream Buff_Stream;
+  me_StreamsCollection::TWorkmemOutputStream Buff_Stream;
   TAddressSegment Result;
 
   if (!Buff_Stream.Init(Buffer))
