@@ -2,7 +2,7 @@
 
 /*
   Author: Martin Eden
-  Last mod.: 2025-08-29
+  Last mod.: 2025-08-30
 */
 
 /*
@@ -15,7 +15,6 @@
 
 #include <me_BaseTypes.h>
 #include <me_Uart.h>
-#include <me_StreamTools.h>
 #include <me_StreamsCollection.h>
 
 #include <Arduino.h> // for millis()
