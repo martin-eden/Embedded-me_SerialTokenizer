@@ -1,10 +1,22 @@
-# What
+## What
 
-(2024-05, 2024-06, 2024-10)
+(2024)
 
 Arduino library to get "entity" from Serial.
 
 "Entity" is something surrounded by spaces.
+
+
+## Obsolete
+
+(2025-08)
+
+This module is considered obsolete and will be dropped from core.
+
+I want to implement it via streams.
+
+This code is witty while streams code would be easy reading.
+
 
 ## Example interaction
 
